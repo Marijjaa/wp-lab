@@ -1,5 +1,6 @@
 package mk.ukim.finki.wp.labwp2.service.impl;
 
+import mk.ukim.finki.wp.labwp2.bootstrap.DataHolder;
 import mk.ukim.finki.wp.labwp2.model.Author;
 import mk.ukim.finki.wp.labwp2.model.Book;
 import mk.ukim.finki.wp.labwp2.repository.BookRepository;
@@ -41,7 +42,7 @@ public class BookServiceImpl implements BookService {
         Author author = authorService
                 .getById(authorId);
 
-        Book book = new Book(title, genre, averageRating, author);
+        Book book = new Book(DataHolder.getCounter(), title, genre, averageRating, author);
         return bookRepository.save(book);
 
     }

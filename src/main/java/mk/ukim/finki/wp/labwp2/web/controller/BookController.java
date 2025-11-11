@@ -23,7 +23,7 @@ public class BookController {
 
 
     @GetMapping
-    public String getBooksPage(@RequestParam(required = false) String error, Model model){
+    public String getBooksPage(@RequestParam(required = false) String error, Model model) {
         if (error != null) {
             model.addAttribute("error", error);
         }
@@ -34,21 +34,33 @@ public class BookController {
         return "listBooks";
     }
 
-    @PostMapping("/add")
+    @GetMapping("/book-form")
+    public String addBookForm(Model model) {
+        List<Author> authors = authorService.findAll();
+        model.addAttribute("authors", authors);
+        return "book-form";
+    }
+
+    @PostMapping
     public String saveBook(@RequestParam String title,
                            @RequestParam String genre,
                            @RequestParam Double averageRating,
-                           @RequestParam Long authorId){
-return "redirect:/books";
+                           @RequestParam Long authorId) {
+        this.bookService.save(title, genre, averageRating, authorId);
+        return "redirect:/books";
     }
 
-    @GetMapping("/edit-form/{bookId}")
-    public String editBookForm(@PathVariable Long bookId, Model model){
-        Book book = bookService.getById(bookId);
-        List<Author> authors = authorService.findAll();
-        model.addAttribute("book", book);
-        model.addAttribute("authors", authors);
-        return "book-form";
+    @GetMapping("/book-form/{bookId}")
+    public String editBookForm(@PathVariable Long bookId, Model model) {
+        try {
+            Book book = bookService.getById(bookId);
+            List<Author> authors = authorService.findAll();
+            model.addAttribute("book", book);
+            model.addAttribute("authors", authors);
+            return "book-form";
+        } catch (RuntimeException e) {
+            return "redirect:/books?error=" + e.getMessage();
+        }
     }
 
     @PostMapping("/{bookId}")
@@ -56,14 +68,14 @@ return "redirect:/books";
                            @RequestParam String title,
                            @RequestParam String genre,
                            @RequestParam Double averageRating,
-                           @RequestParam Long authorId){
+                           @RequestParam Long authorId) {
         this.bookService.edit(bookId, title, genre, averageRating, authorId);
-return "redirect:/books";
+        return "redirect:/books";
     }
 
     @PostMapping("/delete/{id}")
-    public String deleteBook(@PathVariable Long id){
+    public String deleteBook(@PathVariable Long id) {
         this.bookService.delete(id);
-         return "redirect:/books";
+        return "redirect:/books";
     }
 }

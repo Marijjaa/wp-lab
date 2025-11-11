@@ -87,18 +87,18 @@
 					</div>
 
 					<div class="form-group">
-						<label for="rating">Rating</label>
+						<label for="averageRating">Average Rating</label>
 						<input type="number"
 						       class="form-control"
-						       id="rating"
-						       name="rating"
+						       id="averageRating"
+						       name="averageRating"
 						       th:value="${book?.getAverageRating()}"
 						       placeholder="Rating">
 					</div>
 
 					<div class="form-group">
 						<label>Author</label>
-						<select name="author" class="form-control">
+						<select name="authorId" class="form-control">
 							<option th:each="author : ${authors}"
 							        th:text="${author.getName() + ' ' + author.getSurname()}"
 							        th:value="${author.getId()}"

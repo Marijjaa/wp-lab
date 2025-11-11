@@ -14,6 +14,11 @@ public class DataHolder {
     public static List<Book> books = new ArrayList<>();
     public static List<BookReservation> reservations = new ArrayList<>();
     public static List<Author> authors = new ArrayList<>();
+    private static long counter=11;
+
+    public static long getCounter() {
+        return counter++;
+    }
 
     @PostConstruct
     public void init() {
