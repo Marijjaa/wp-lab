@@ -1,7 +1,10 @@
 package mk.ukim.finki.wp.labwp2.service.impl;
 
+import mk.ukim.finki.wp.labwp2.bootstrap.DataHolder;
+import mk.ukim.finki.wp.labwp2.model.Author;
 import mk.ukim.finki.wp.labwp2.model.Book;
 import mk.ukim.finki.wp.labwp2.repository.BookRepository;
+import mk.ukim.finki.wp.labwp2.service.AuthorService;
 import mk.ukim.finki.wp.labwp2.service.BookService;
 import org.springframework.stereotype.Service;
 
@@ -10,14 +13,66 @@ import java.util.List;
 @Service
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
+    private final AuthorService authorService;
 
-    public BookServiceImpl(BookRepository bookRepository) {
+    public BookServiceImpl(BookRepository bookRepository, AuthorService authorService) {
         this.bookRepository = bookRepository;
+        this.authorService = authorService;
     }
 
     @Override
     public List<Book> listAll() {
         return bookRepository.findAll();
+    }
+
+    @Override
+    public Book getById(Long id) {
+        return bookRepository.getById(id).orElseThrow(() -> new IllegalArgumentException("Book with id " + id + " not found!"));
+    }
+
+    @Override
+    public Book save(String title, String genre, double averageRating, Long authorId) {
+        if (title == null || title.isEmpty() ||
+                genre == null || genre.isEmpty() ||
+                 averageRating < 0 ||
+                authorId == null) {
+            throw new IllegalArgumentException();
+        }
+
+        Author author = authorService
+                .getById(authorId);
+
+        Book book = new Book(DataHolder.getCounter(), title, genre, averageRating, author);
+        return bookRepository.save(book);
+
+    }
+
+    @Override
+    public Book edit(Long id, String title, String genre, double averageRating, Long authorId) {
+        if (title == null || title.isEmpty() ||
+                genre == null || genre.isEmpty() ||
+                averageRating < 0 ||
+                authorId == null) {
+            throw new IllegalArgumentException();
+        }
+
+        Author author = authorService
+                .getById(authorId);
+
+        Book book = getById(id);
+
+        book.setTitle(title);
+        book.setGenre(genre);
+        book.setAverageRating(averageRating);
+        book.setAuthor(author);
+
+        return bookRepository.save(book);
+    }
+
+
+    @Override
+    public void delete(Long id) {
+        bookRepository.delete(id);
     }
 
     @Override

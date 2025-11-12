@@ -33,7 +33,7 @@ public class MyFilter implements Filter {
         String path = req.getServletPath();
 
         if (bookTitle == null && sessionBookTitle == null && req.getServletPath().startsWith("/bookReservation")) {
-            resp.sendRedirect("/servlet/books");
+            resp.sendRedirect("/books");
         } else {
             filterChain.doFilter(req, resp);
         }
