@@ -23,7 +23,11 @@ public class DataHolder {
     @PostConstruct
     public void init() {
         Author mac = new Author(1L,"mac", "mac", "MKD", "Najaaca");
+        Author mac1 = new Author(2L,"maca", "maci", "MKD", "eeej");
+        Author mac2 = new Author(3L,"macka", "maciii", "MKD", "hahaha");
         authors.add(mac);
+        authors.add(mac1);
+        authors.add(mac2);
 
         books.add(new Book(1L,"Bajkite na Marija", "Fiction", 10.0, mac));
         books.add(new Book(2L,"The Silent River", "Mystery", 8.2, mac));

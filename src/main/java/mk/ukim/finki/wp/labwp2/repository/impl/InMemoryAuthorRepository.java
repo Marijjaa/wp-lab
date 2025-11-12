@@ -19,4 +19,16 @@ public class InMemoryAuthorRepository implements AuthorRepository {
     public Optional<Author> getById(Long id) {
         return DataHolder.authors.stream().filter(a -> a.getId().equals(id)).findFirst();
     }
+
+    @Override
+    public Author save(Author author) {
+        delete(author.getId());
+        DataHolder.authors.add(author);
+        return author;
+    }
+
+    @Override
+    public void delete(Long id) {
+        DataHolder.authors.removeIf(m -> m.getId().equals(id));
+    }
 }
